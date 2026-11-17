@@ -1,5 +1,6 @@
 # Local launch scripts (machine paths)
 *.bat
+!push.bat
 
 # Live accounts and saves
 player/

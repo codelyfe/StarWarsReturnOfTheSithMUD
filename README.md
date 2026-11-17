@@ -61,31 +61,249 @@ The port is 1111, set in `src/startup`. The game also opens `port+1`,
 - `doc` — original SMAUG notes. Online help is more current.
 - `src` — C source. Space combat is in `space.c`, `ships.c`, and `11.c`. Force code is in `force.c`, `finfo.c`, `fskills.c`, and `new_fskills.c`.
 
+## What you can do
+
+This is a Star Wars SMAUG. You walk rooms, talk, fight, buy gear, join a
+clan, and fly a ship between star systems. The port is 1111.
+
+**On the ground.** `look` describes the room and can draw a small map.
+`map` shows that map once. `automap` turns it on or off. `alias` stores up
+to eight shortcuts on your character (`alias n north`, `alias greet say
+Hello there.`, `alias n` to remove one). The saved name has to match the
+whole word, so a short alias does not swallow a longer command.
+
+**Houses.** `buyhouse` buys the room you are standing in for 25,000 credits.
+One house per character. It starts locked. `house lock` and `house unlock`
+close and open it. `house guest <name>` and `house unguest <name>` name who
+may enter while it is locked. The owner, a named guest, and immortals can
+always enter. Houses are saved in `system/houses.dat`. They are separate
+from clan storerooms.
+
+**Quests.** Builder quests live in `system/quests.dat`. Each one has an id,
+a name, a giver, a credit prize, and up to six stages. A stage is visit a
+room or kill a mobile. At the giver, `qaccept` starts it, `qstat` shows the
+current stage, and `qfinish` pays you when every stage is done. Progress is
+saved on the character. One sample is loaded: an Academy errand from the
+receptionist on Honoghr. The older `quest` command is still the quest talk
+channel.
+
+**Force.** Jedi and Sith do not use the old "feel" skill. Alignment runs
+from -100 to 100. Opposite alignment (a Jedi at -100, a Sith at 100) causes
+pain and skill loss. Skill numbers follow `force/forceskills.lst`. See
+Force below for the saved fields.
+
+**Ships and space.** You buy, launch, and fight in ships. Primaries and
+secondaries are separate weapon types and counts. Speed, maneuver, and size
+decide whether a shot hits. Barrel roll evades beams. Juke evades warheads.
+A black-market yard is any room flagged `blackmarket`. Simulators are ships
+flagged `simulator` with a return room (`simvnum`). Clan shipyards are Sienar Fleet Systems and SoroSuub. Every prototype
+the game loads is listed under Ships.
+
+**Uncharted space.** Besides the named systems below, space holds 8,000
+seeded systems. From a launched ship, `survey` jumps to a new one.
+`explore` lands you on a small surface with wildlife and records the world.
+`guide` lists the worlds you have walked. `warp <planet>` returns you only
+to a world already in that guide. Charts are saved in `space/charts`. Each
+character's guide is `space/guides/<name>.guide`.
+
+**Prestige.** Five classes cap at level 10: Medic, Mandalorian, Inquisitor,
+Royal Guard, and Gunner. `level` lists them. `help medic`, `help
+mandalorian`, `help inquisitor`, `help royal guard`, and `help gunner` list
+the requirements. Trainable skills include Command, Bargain, Gunnery, and
+Beast Handling. Gunner levels also raise Gunnery.
+
+**Law.** Infamy tracks theft and player killing. At 15 an equal bounty
+hunter travels by ship, then on foot, and warns you as it gets close.
+Killing it drops the contract for a while. At 35 a public trial jails you.
+The sentence only ticks while you are online, then you are returned to the
+room you left. Immortals can force it with `sendhunter <player>`. `infamy`
+shows your score.
+
+**Clans.** Booted clans are The Republic, The Sith Empire, The Jedi Order,
+Antarian Rangers, The BlackSun Syndicate, Sienar Fleet Systems, SoroSuub,
+and the Bounty Hunters Guild. There is no separate Galactic Empire clan.
+Worlds that would be Imperial are held by The Sith Empire.
+
+**Clients.** A client that accepts MSDP (telnet option 69) is offered
+health, max health, movement, max movement, the room name, and the room
+vnum with each prompt, so it can draw bars and a map beside the text.
+
+In-game `help`, `wizhelp`, `hlist`, and `changes` are more detailed than
+this file. Topic help includes `help map`, `help survey`, `help alias`,
+`help house`, and `help qaccept`.
+
 ## Planets
 
-Worlds load in the star system they belong to in the films. Imperial worlds
-are held by the clan `The Sith Empire`, because this build has no separate
-Galactic Empire clan. Alliance worlds use `The Republic`. Hutt and independent
-worlds are Neutral.
+Sixty worlds are on `planets/planet.lst` and load at boot. The system name
+is the name in the `.system` file, which is what the ship computer shows.
+A few film worlds sit in a system whose name is not the planet's name.
+Those are called out in the last column.
 
-| World | System |
+`ossus.are` and `guild.are` are not on `area/area.lst`. Their room numbers
+collide with Tatooine and the Sith academy. Ossus is in the Adegan system
+but has no landing area until that file is renumbered. Alassa is not a
+Star Wars planet and is not booted.
+
+### The Sith Empire
+
+| World | System | Note |
+|---|---|---|
+| Coruscant | Coruscant | |
+| Corellia | Corell | system file `corell.system` |
+| Kashyyyk | Kashyyyk | |
+| Endor | Endor | |
+| Bakura | Bakura | |
+| Byss | Byss | |
+| Bilbringi | Bilbringi | |
+| Honoghr | Honoghr | |
+| Korriban | Horuset | |
+| Geonosis | Geonosis | |
+| Mustafar | Mustafar | |
+| Scarif | Scarif | |
+| Eadu | Eadu | |
+| Exegol | Exegol | |
+| Malachor | Malachor | |
+| Eriadu | Eriadu | |
+
+### The Republic
+
+| World | System | Note |
+|---|---|---|
+| Mon Calamari | Calamari | |
+| Yavin IV | Yavin | |
+| Naboo | Naboo | |
+| Kamino | Kamino | |
+| Christophsis | Christophsis | |
+| Polis Massa | Polis Massa | |
+| Hoth | Hoth | |
+| Alderaan | Alderaan | |
+| Crait | Crait | |
+| Lothal | Lothal | |
+| Dantooine | Dantooine | |
+| Sullust | Sullust | |
+
+### The Jedi Order
+
+| World | System | Note |
+|---|---|---|
+| Ossus | Adegan | planet record only; no ground area |
+
+### Neutral
+
+| World | System | Note |
+|---|---|---|
+| Tatooine | Tatoo | Tatoo I and Tatoo II |
+| Nal Hutta | Y'toub | shares the system with Nar Shaddaa |
+| Nar Shaddaa | Y'toub | |
+| Ord Mantell | Bright Jewel | |
+| Bespin | Bespin | |
+| Thorne Asteroid | Thorne | not a film world |
+| XN1224-a | AB90152 - Asteroid belt | shares the belt with HP9015-l |
+| HP9015-l | AB90152 - Asteroid belt | |
+| Utapau | Utapau | |
+| Felucia | Felucia | |
+| Mygeeto | Mygeeto | |
+| Saleucami | Saleucami | |
+| Cato Neimoidia | Cato Neimoidia | |
+| Dagobah | Dagobah | |
+| Jedha | Jedha | |
+| Jakku | Jakku | |
+| Takodana | Takodana | |
+| Ahch-To | Ahch-To | |
+| Dathomir | Dathomir | |
+| Mandalore | Mandalore | |
+| Ryloth | Ryloth | |
+| Kessel | Kessel | |
+| Ilum | Ilum | |
+| Onderon | Onderon | |
+| Kuat | Kuat | |
+| Bothawui | Bothawui | |
+| Rodia | Rodia | |
+| Umbara | Umbara | |
+| Fondor | Fondor | |
+| Florrum | Florrum | |
+| Kalee | Kalee | |
+
+## Star systems
+
+`space/space.lst` loads 61 systems. Fifty-nine of them hold the worlds in
+the tables above. Two do not:
+
+| System | File | What it is |
+|---|---|---|
+| Simulator | `simulator.system` | cockpit simulators, not a place you hyperspace to |
+| AB77173 - Asteroid belt | `AB77173.system` | a second belt, with no planet file |
+
+Every other booted system has at least one planet. Shared systems:
+
+| System | Worlds |
 |---|---|
-| Coruscant, Corellia, Kashyyyk, Endor, Bakura, Byss, Bilbringi, Honoghr | their own systems |
-| Tatooine | Tatoo (Tatoo I and Tatoo II) |
-| Nal Hutta, Nar Shaddaa | Y'Toub |
-| Mon Calamari | Calamari |
-| Yavin IV | Yavin |
-| Ord Mantell | Bright Jewel |
-| Bespin | Bespin |
-| Korriban | Horuset |
-| Ossus | Adegan |
-| XN1224-a, HP9015-l | AB90152 asteroid belt |
+| Tatoo | Tatooine |
+| Y'toub | Nal Hutta, Nar Shaddaa |
+| Bright Jewel | Ord Mantell |
+| Horuset | Korriban |
+| Adegan | Ossus |
+| Calamari | Mon Calamari |
+| Yavin | Yavin IV |
+| Corell | Corellia |
+| Thorne | Thorne Asteroid |
+| AB90152 - Asteroid belt | XN1224-a, HP9015-l |
 
-`ossus.are` and `guild.are` are not on the boot list. Their room numbers
-collide with Tatooine and the Sith academy, and loading them would replace
-those rooms. Ossus is in the Adegan system but has no landing area until
-that file is renumbered. Thorne is not a film world, so it has its own
-system. Alassa is not a Star Wars planet and is not booted.
+The other 49 systems use the same name as their one world: Coruscant,
+Kashyyyk, Endor, Bakura, Byss, Bespin, Honoghr, Bilbringi, Naboo, Kamino,
+Geonosis, Mustafar, Utapau, Felucia, Mygeeto, Christophsis, Saleucami,
+Polis Massa, Cato Neimoidia, Hoth, Dagobah, Alderaan, Scarif, Jedha, Eadu,
+Jakku, Takodana, Ahch-To, Crait, Exegol, Lothal, Dathomir, Mandalore,
+Ryloth, Kessel, Ilum, Malachor, Onderon, Dantooine, Kuat, Sullust, Eriadu,
+Bothawui, Rodia, Umbara, Fondor, Florrum, and Kalee.
+
+`survey` can still drop you in one of the 8,000 uncharted systems. Those
+are not in `space.lst`. They are created when someone surveys, then saved
+under `space/charts`.
+
+## Ships
+
+`ships/prototype.lst` loads 33 prototypes. The name is the first `Name`
+line in each file, which is the hull you buy and fly. Later `Name` lines
+in the same file are rooms inside that hull.
+
+| Hull | File |
+|---|---|
+| X-Wing Multipurpose Fighter | `X-Wing.proto` |
+| A-Wing Scout Fighter | `A-Wing.proto` |
+| B-Wing Heavy Fighter | `B-Wing.proto` |
+| Y-Wing Bomber | `Y-Wing.proto` |
+| Incom Z-95 Headhunter | `Z-95.proto` |
+| T-Wing Multirole Interceptor | `T-Wing.proto` |
+| R-41 Starchaser | `R-41.proto` |
+| HLAF-500 Light Attack Fighter | `HLAF-500.proto` |
+| A-24 Sleuth Scout Ship | `A-24.proto` |
+| Modified CloakShape Fighter | `C-Shape.proto` |
+| Toscan Q-8 Multirole Starfighter | `Q-8.proto` |
+| Preybird Heavy Assault Starfighter | `Preybird.proto` |
+| GAT-12j Skipray Blastboat | `GAT-12j.proto` |
+| XG-1 Assault Gunboat | `XG-1.proto` |
+| XM-1 Missile Boat | `XM-1.proto` |
+| Subpro TL-118 StarHammer | `TL-118.proto` |
+| Twin Ion Engine Fighter | `TIE.proto` |
+| TIE Bomber | `TIE.B.proto` |
+| TIE Defender | `TIE.D.proto` |
+| TIE Interceptor | `TIE.I.proto` |
+| TIE Advanced x1 | `TIE.A.proto` |
+| Firespray-31 Patrol Craft | `Firespray.proto` |
+| YT-1300 Transport Freighter | `YT-1300.proto` |
+| Ghtroc 720 Light Freighter | `G-720.proto` |
+| Incom X-29 StarCarry | `X-29.proto` |
+| T-4a Lambda Class Shuttle | `T-4a.proto` |
+| GR-75 Medium Transport | `GR-75.proto` |
+| Blockade Runner Corvette | `BRC.proto` |
+| Nebulon-B Escort Frigate | `NebulonB.proto` |
+| MC80 Star Cruiser | `MC80.proto` |
+| MC-90 Mon Calamari Cruiser | `MC-90.proto` |
+| Imperial class Star Destroyer | `ISD.proto` |
+| Super class Star Destroyer | `SSD.proto` |
+
+Four more prototype files sit in `ships/` and are not on `prototype.lst`, so they do not load: `CSH.proto` (Corellian System Hopper), `K-Wing.proto` (K-Wing Heavy Bomber), `CCC.proto` (Crusader Class Cruiser), and `Lambda.proto` (a second copy of the T-4a Lambda). The loaded Lambda is `T-4a.proto`.
 
 ## Force
 
