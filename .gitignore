@@ -1,0 +1,16 @@
+# Local launch scripts (machine paths)
+*.bat
+
+# Live accounts and saves
+player/
+backup/
+
+# Runtime logs
+log/
+
+# Build output
+*.o
+src/swr
+src/swr.exe
+*.exe
+*.out
